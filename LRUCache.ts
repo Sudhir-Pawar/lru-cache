@@ -31,19 +31,29 @@ export class LRUCache {
       return;
     }
 
-    console.log("size: ", this.size);
-    console.log("capacity: ", this.capacity);
     if (this.size == this.capacity) {
       const lastNode = this.linkedList.popBack();
       if (lastNode !== null) {
-        this.size--;
         this.map.delete(lastNode.key);
+        this.size--;
       }
     }
     const newNode = new Node(key, value);
     this.map.set(key, newNode);
     this.linkedList.pushFront(newNode);
     this.size++;
+  }
+
+  remove(key: string): string | null {
+    const node = this.map.get(key);
+    if (node) {
+      this.map.delete(key);
+      this.linkedList.remove(node);
+      this.size--;
+      return node.value;
+    }
+
+    return null;
   }
 
   getSize(): number {
@@ -59,6 +69,8 @@ export class LRUCache {
   }
 
   displayContents() {
+    console.log("size: ", this.size);
+    console.log("capacity: ", this.capacity);
     console.log("Map: ", this.map.keys());
     this.linkedList.traverse();
   }
